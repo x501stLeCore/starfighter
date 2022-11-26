@@ -10,8 +10,8 @@ class Vue:
     def setListen(self, canvas, eventName, command):
         canvas.bind(eventName, command)
 
-class VueMenu(tk.Frame):
-    def __init__(self, root): # fct_creer_session, destroy_Session, fct_Choix_diff, set_Leaderboard, closeApp
+class VueMenu():
+    def __init__(self): # root, fct_creer_session, destroy_Session, fct_Choix_diff, set_Leaderboard, closeApp
         """ Création graphique du menu du logiciel,
             reçoit en paramètre les méthodes à appeler au controlleur
             lorsqu'on appuie sur un bouton du GUI.
@@ -24,7 +24,8 @@ class VueMenu(tk.Frame):
             set_Leaderboard (méthode):      Bouton pour appeler la méthode set_Leaderboard
             closeApp (méthode):             Bouton pour appeler root.destroy()
         """
-        self.root = root
+        #self.root = root
+        
     #     self.root.grid()
     #     # self.btn_create = tk.PhotoImage(
     #     #                         file="images/buttons/btn_create_session.png"

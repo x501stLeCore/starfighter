@@ -16,18 +16,12 @@ class MenuControleur:
     sessions = "sessions"  # Répertoire
     ext = ".csv"
 
-    def __init__(self, root): # JeuControleur, argument à ajouter à la fin du projet (closeApp retiré)
+    def __init__(self): # JeuControleur, argument à ajouter à la fin du projet (closeApp retiré)
         """ Fait passer les méthodes du MenuControleur en entier en paramètres à la vue
             pour avoir accès au méthodes du controleur à partir des boutons graphiques.
         """  
-        
         #self.jeuControler = JeuControleur  # variable à ajouter à la fin du projet
-        self.vue = VueMenu(
-            root, 
-        )
-        
-    
-        
+        self.vue = VueMenu()       
         # self.create_Session,
         #     self.destroy_Session, self.set_Difficulte,
         #     self.set_Leaderboard, closeApp

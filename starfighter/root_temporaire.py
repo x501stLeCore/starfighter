@@ -15,16 +15,15 @@ class Root(tk.Tk):
         #[a,b] = simpledialog.askstring(title="Votre grosseur de fenetre", prompt="Saisissez la largeur et la hauteur de la fenetre \n(Veuillez séparer les 2 valeurs par une virgule)").split(sep=",")
         #f"{a}x{b}"
         self.geometry("800x600")
-        self.frame_menu = tk.Frame(self, background="white")
+        #self.frame_menu = tk.Frame(self, background="white")
         self.frame_jeu = tk.Frame(self, background="white")
         
-        self.menuControleur = MenuControleur(self.frame_menu) #Rajouter self.jeu (2e argument) à la fin du projet # self.destroy retiré
-        self.frame_menu.pack()
         
+        self.menuControleur = MenuControleur() #Rajouter self.jeu (2e argument) à la fin du projet # self.destroy retiré
+        #self.frame_menu.pack()
         menu_gui = tk.Menu(self)
         # self.config(menu=MenuControleur.creationMenu)
         self.config(menu=menu_gui)
-        
         self.Fichier = tk.Menu(menu_gui, tearoff=0)   
         menu_gui.add_cascade(label="Nouveau", menu=self.Fichier)
         self.Fichier.add_command(label="Créer une session", command=self.menuControleur.create_Session)
@@ -48,13 +47,10 @@ class Root(tk.Tk):
         self.Fenetre = tk.Menu(menu_gui, tearoff=0)
         menu_gui.add_cascade(label="Fenêtre", menu=self.Fenetre)
         self.Fenetre.add_command(label="Ajuster la fenêtre de jeu", command=self.menuControleur.resize_Frame)
-        
-        
-        
-        #self.frame_jeu.pack()
-        #self.Fenetre.add_command(label="Définir la taille du jeu", command=self.menu.set_frame_jeu_size)
-        
-        # self.frame_jeu.pack(fill="both", expand=True)
-        # self.jeu =
-        
         #self.menu.start()
+        
+        #self.frame_jeu.pack()        
+        #self.frame_jeu.pack(fill="both", expand=True)
+        #self.jeu =
+        
+      
