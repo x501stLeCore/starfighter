@@ -1,5 +1,8 @@
+# Sous-classe de Enemy
 
-
-class Ovni:
+class Ovni(Enemy):
     def __init__(self):
-        pass
+        super().__init__()
+        
+        self.image = PhotoImage(file="images/ovni.png")
+        

@@ -49,6 +49,8 @@ class Root(tk.Tk):
         menu_gui.add_cascade(label="Fenêtre", menu=self.Fenetre)
         self.Fenetre.add_command(label="Ajuster la fenêtre de jeu", command=self.menuControleur.resize_Frame)
         
+        
+        
         #self.frame_jeu.pack()
         #self.Fenetre.add_command(label="Définir la taille du jeu", command=self.menu.set_frame_jeu_size)
         
