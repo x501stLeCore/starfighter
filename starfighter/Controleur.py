@@ -16,16 +16,36 @@ class MenuControleur:
     sessions = "sessions"  # Répertoire
     ext = ".csv"
 
-    def __init__(self, root,  closeApp): # JeuControleur, argument à ajouter à la fin du projet
+    def __init__(self, root): # JeuControleur, argument à ajouter à la fin du projet (closeApp retiré)
         """ Fait passer les méthodes du MenuControleur en entier en paramètres à la vue
             pour avoir accès au méthodes du controleur à partir des boutons graphiques.
         """  
+        
         #self.jeuControler = JeuControleur  # variable à ajouter à la fin du projet
         self.vue = VueMenu(
-            root, self.create_Session,
-            self.destroy_Session, self.set_Difficulte,
-            self.set_Leaderboard, closeApp
+            root, 
         )
+        
+    
+        
+        # self.create_Session,
+        #     self.destroy_Session, self.set_Difficulte,
+        #     self.set_Leaderboard, closeApp
+
+
+    # def create_frame(self, root):
+    #     """ Création d'un frame pour le menu. """
+        
+    def resize_Frame(self):
+        """ Redimensionne le canvas en fonction de la taille de la fenêtre."""
+        width = simpledialog.askinteger(title="Redimensionner la fenêtre",
+                                        prompt="Largeur de la fenêtre (inscrire un entier)")
+        height = simpledialog.askinteger(title="Redimensionner la fenêtre",
+                                         prompt="Hauteur de la fenêtre (inscrire un entier)")
+        
+        frame = ttk.Frame(width=width, height=height)
+        frame.pack()
+        # frame.pack()
 
     def start(self):
         """Créer graphiquement le menu."""
@@ -38,8 +58,7 @@ class MenuControleur:
         """
         name = simpledialog.askstring(
             title="inscription session",
-            prompt="Saisissez votre nom de la session à creer")
-        name.capitalize()
+            prompt="Saisissez votre nom de la session à creer").capitalize()
         errorCode = 0
         try:
             if not exists(MenuControleur.sessions + "/"):
@@ -66,31 +85,26 @@ class MenuControleur:
         except ValueError:
             pass
 
-    def set_Difficulte(self):
-        """ Match case Python, équivalent d'un switch, peut prendre une string comme choix de 'case'.
+    def set_Difficulte(self, choixDifficulte):
+        """ Match case Python, équivalent d'un switch.
 
         Arguments:
-            choixDifficulte (string): reçoit en paramètre la difficulté choisie dans le menu à choix déroulant.
+            choixDifficulte (int): reçoit en paramètre la difficulté choisie dans le menu supérieur
             
-        Envoie ensuite en paramètre la difficulté au jeuControleur et initialise la vitesse de jeu.
+        Envoie ensuite en paramètre la difficulté au jeuControleur et initialise la diffculté du jeu.
         """
-        
-        choixDifficulte = simpledialog.askinteger(title="Choix de difficulté", prompt="inscrivez un nombre entre 1 et 3")
-        msgdiff = str(choixDifficulte)
-        messagebox.showinfo("Choix de difficulté", "La difficulté choisie est : " +  msgdiff)
-        # match choixDifficulte:
-        #     case "1-Facile": difficulte = 1
-        #     case "2-Normal": difficulte = 2
-        #     case "3-Difficile": difficulte = 3
-        #     case "4-Progressif": difficulte = 4
-
-        #self.jeuControleur.set_difficulte(difficulte)
+        match choixDifficulte:
+            case 1 : stringdifficulte = "Facile"
+            case 2 : stringdifficulte = "Moyen"
+            case 3 : stringdifficulte = "Difficile"
+            
+        messagebox.showinfo("Choix de difficulté", "La difficulté choisie est : \n\n" +  stringdifficulte)
+        # self.jeuControleur.set_difficulte(choixDifficulte)
 
     def destroy_Session(self) -> None:
         """ Destruction d'un fichier csv, on entre le nom de l'utilisateur et s'il existe le fichier sera effacé. """
         name = simpledialog.askstring(title="effacer une session",
-                                      prompt="Saisissez le nom à effacer")
-        name.capitalize()
+                                      prompt="Saisissez le nom à effacer").capitalize()
         errorCode = 0
 
         try:
@@ -116,8 +130,7 @@ class MenuControleur:
                             title="Afficher les temps d'un utilisateur",
                             prompt="Saisissez le nom de l'utilisateur "
                                    + "pour voir les scores"
-                        )
-        name.capitalize()
+                        ).capitalize()
 
         if exists(MenuControleur.sessions + "/" + name + MenuControleur.ext):
             with open(MenuControleur.sessions + "/" + name + MenuControleur.ext, "r") as f:
