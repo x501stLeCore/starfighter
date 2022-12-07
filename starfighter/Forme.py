@@ -43,7 +43,7 @@ class Vaisseau(Forme):
 
     def is_alive(self):
         return self.alive
-   
+
     def kill(self):
         self.alive = False
 
