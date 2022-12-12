@@ -58,7 +58,7 @@ class Root(tk.Tk):
         self.sub_Fenetre.add_command(label="Petite", command=partial(self.resize_Frame, 1))
         self.sub_Fenetre.add_command(label="Moyenne", command=partial(self.resize_Frame, 2))
         self.sub_Fenetre.add_command(label="Grande", command=partial(self.resize_Frame, 3))
-        self.sub_Fenetre.add_command(label="plein écran", command=partial(self.resize_Frame, 4))
+        self.sub_Fenetre.add_command(label="Plein écran", command=partial(self.resize_Frame, 4))
         #self.menu.start()
         
         #self.frame_jeu.pack()        

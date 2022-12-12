@@ -29,17 +29,6 @@ class MenuControleur:
 
     # def create_frame(self, root):
     #     """ Création d'un frame pour le menu. """
-        
-    def resize_Frame(self):
-        """ Redimensionne le canvas en fonction de la taille de la fenêtre."""
-        width = simpledialog.askinteger(title="Redimensionner la fenêtre",
-                                        prompt="Largeur de la fenêtre (inscrire un entier)")
-        height = simpledialog.askinteger(title="Redimensionner la fenêtre",
-                                         prompt="Hauteur de la fenêtre (inscrire un entier)")
-        
-        frame = ttk.Frame(width=width, height=height)
-        frame.pack()
-        # frame.pack()
 
     def start(self):
         """Créer graphiquement le menu."""
