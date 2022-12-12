@@ -22,13 +22,23 @@ class Forme:
         return self.color
 
 
-class Missile(Forme):
+class Misc(Forme):
     def __init__(self, width, height, x, y):
-        super().__init__(width, height, x, y, "yellow")
+        super().__init__(width, height, x, y, "white")
         self.speed = 4
 
     def get_speed(self):
         return self.speed
+
+
+class Asteroide(Misc):
+    def __init__(self, width, height, x, y):
+        super().__init__(width, height, x, y, "white", 4)
+
+
+class Missile(Misc):
+    def __init__(self, width, height, x, y):
+        super().__init__(width, height, x, y, "yellow", 4)
 
 
 class Vaisseau(Forme):
