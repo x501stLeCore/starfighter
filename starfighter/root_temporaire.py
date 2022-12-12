@@ -18,39 +18,58 @@ class Root(tk.Tk):
         #self.frame_menu = tk.Frame(self, background="white")
         self.frame_jeu = tk.Frame(self, background="white")
         
+        # canvas = tk.Canvas(Root) #est-ce que ça va fonctionner comme prévu?
         
         self.menuControleur = MenuControleur() #Rajouter self.jeu (2e argument) à la fin du projet # self.destroy retiré
         #self.frame_menu.pack()
         menu_gui = tk.Menu(self)
         # self.config(menu=MenuControleur.creationMenu)
         self.config(menu=menu_gui)
-        self.Fichier = tk.Menu(menu_gui, tearoff=0)   
+        self.Fichier = tk.Menu(menu_gui, tearoff = 0)   
         menu_gui.add_cascade(label="Nouveau", menu=self.Fichier)
         self.Fichier.add_command(label="Créer une session", command=self.menuControleur.create_Session)
         self.Fichier.add_command(label="Effacer une session", command=self.menuControleur.destroy_Session)
         self.Fichier.add_separator()
         self.Fichier.add_command(label="Quitter", command=self.destroy)
         
-        self.Difficulte = tk.Menu(menu_gui, tearoff=0)
+        # Menu diffiulté
+        self.Difficulte = tk.Menu(menu_gui, tearoff = 0)
         menu_gui.add_cascade(label="Difficulté", menu=self.Difficulte)
+        
         # Sous-menu "Difficulté"
-        self.sub_difficulty = tk.Menu(self.Difficulte, tearoff=0)
+        self.sub_difficulty = tk.Menu(self.Difficulte, tearoff = 0)
         self.Difficulte.add_cascade(label="Choisir la difficulté", menu=self.sub_difficulty)
         self.sub_difficulty.add_command(label="Facile", command=partial(self.menuControleur.set_Difficulte, 1))
         self.sub_difficulty.add_command(label="Moyen", command=partial(self.menuControleur.set_Difficulte, 2))
         self.sub_difficulty.add_command(label="Difficile", command=partial(self.menuControleur.set_Difficulte, 3))
      
-        self.Score = tk.Menu(menu_gui, tearoff=0)
+        self.Score = tk.Menu(menu_gui, tearoff = 0)
         menu_gui.add_cascade(label="Scores", menu=self.Score)
         self.Score.add_command(label="Afficher les scores de la session", command=self.menuControleur.set_Leaderboard)
         
-        self.Fenetre = tk.Menu(menu_gui, tearoff=0)
+        #menu Fenetre
+        self.Fenetre = tk.Menu(menu_gui, tearoff = 0)
         menu_gui.add_cascade(label="Fenêtre", menu=self.Fenetre)
-        self.Fenetre.add_command(label="Ajuster la fenêtre de jeu", command=self.menuControleur.resize_Frame)
+        
+        
+        #Sous-Menu fenetre
+        self.sub_Fenetre = tk.Menu(self.Fenetre, tearoff = 0)
+        self.Fenetre.add_cascade(label="Ajuster la fenêtre de jeu", menu=self.sub_Fenetre) #command=self.menuControleur.resize_Frame)
+        self.sub_Fenetre.add_command(label="Petite", command=partial(self.resize_Frame, 1))
+        self.sub_Fenetre.add_command(label="Moyenne", command=partial(self.resize_Frame, 2))
+        self.sub_Fenetre.add_command(label="Grande", command=partial(self.resize_Frame, 3))
+        self.sub_Fenetre.add_command(label="plein écran", command=partial(self.resize_Frame, 4))
         #self.menu.start()
         
         #self.frame_jeu.pack()        
         #self.frame_jeu.pack(fill="both", expand=True)
         #self.jeu =
         
-      
+
+    def resize_Frame(self, choixSize):
+        match choixSize:
+            case 1: newSize = [800,600, self.attributes("-fullscreen", False)]
+            case 2: newSize = [1000,800, self.attributes("-fullscreen", False)]
+            case 3: newSize = [1200,1000, self.attributes("-fullscreen", False)]
+            case 4: newSize = [self.winfo_screenwidth(), self.winfo_screenheight(), self.attributes("-fullscreen", True)]
+        self.geometry(f"{newSize[0]}x{newSize[1]}")
