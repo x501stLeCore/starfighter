@@ -73,3 +73,5 @@ class Root(tk.Tk):
             case 3: newSize = [1200,1000, self.attributes("-fullscreen", False)]
             case 4: newSize = [self.winfo_screenwidth(), self.winfo_screenheight(), self.attributes("-fullscreen", True)]
         self.geometry(f"{newSize[0]}x{newSize[1]}")
+        # tester si le frame jeu va bien se redimensionner (pour le gameplay)
+        #self.frame_jeu.pack(fill="both", expand=True)
