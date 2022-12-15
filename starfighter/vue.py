@@ -6,9 +6,129 @@ import c31Geometry2 as c31
 class Vue:
     def __init__(self, root):
         self.root = root
-
+    
     def setListen(self, canvas, eventName, command):
         canvas.bind(eventName, command)
+        
+class VueJeu(Vue):
+    def __init__(self, root, map, bordure, vaisseau,
+                 rect_bleus: list, difficulte, nom):
+        super().__init__(root)
+        self.canvas = tk.Canvas(root, background=bordure.get_color(),
+                                width=bordure.get_width(),
+                                height=bordure.get_height())
+        
+        self.name_hud = tk.Label(text=nom, font=("Arial", 25),
+                                 background="white")
+        self.difficulty_hud = tk.Label(text=difficulte, font=("Arial", 25),
+                                       background="white")
+        self.update_difficulty(difficulte)
+        self.timer_hud = tk.Label(text=str(0), font=("Arial", 25),
+                                  background="white")
+
+        self.map = self.canvas.create_rectangle(map.get_x(),
+                                                map.get_x(),
+                                                map.get_y(),
+                                                map.get_y(),
+                                                fill=map.get_color(),
+                                                outline=map.get_color())
+        self.vaisseau = c31.Carre(
+                self.canvas,
+                c31.Vecteur(
+                    vaisseau.get_x(), vaisseau.get_y()),
+                vaisseau.get_width(),
+                remplissage=vaisseau.get_color(),
+                bordure=vaisseau.get_color()
+                )
+
+        self.ovnis = [
+            c31.Rectangle(self.canvas,
+                          c31.Vecteur(rect.get_x(), rect.get_y()),
+                          rect.get_width(), rect.get_height(),
+                          remplissage=rect.get_color(),
+                          bordure=rect.get_color())
+            for rect in rect_bleus
+            ]
+
+        self.power_up = 0
+        self.canvas.grid(column=0, columnspan=3)
+        self.name_hud.grid(row=1, column=0, sticky="sw")
+        self.difficulty_hud.grid(row=1, column=0, sticky="s")
+        self.timer_hud.grid(row=1, column=0, sticky="se")
+
+    def draw_ovnis(self):
+        for rect in self.ovnis:
+            rect.draw()
+
+    def update_name(self, name):
+        self.name_hud.config(text=name)
+        
+    # def update_canvas(self, bordure):
+    #     self.canvas.config(width=bordure.get_width(),
+    #                        height=bordure.get_height())
+
+    def update_difficulty(self, diff_number):
+        if diff_number == 1:
+            diff = "Facile"
+        elif diff_number == 2:
+            diff = "Moyen"
+        elif diff_number == 3:
+            diff = "Difficile"
+        self.difficulty_hud.config(text=diff)
+
+    def update_timer(self, timer):
+        self.timer_hud.config(text=str(round(timer, 3)))
+
+    def draw_vaisseau(self):
+        self.vaisseau.draw()
+
+    def draw_power_up(self, power, x, y):
+        self.power_up = c31.Cercle(
+                        self.canvas,
+                        c31.Vecteur(x, y),
+                        power.get_width(),
+                        remplissage=power.get_color(),
+                        bordure=power.get_color()
+                    )
+        self.power_up.draw()
+
+    def destroy_power_up(self):
+        self.power_up.delete()
+        self.power_up = None
+
+    def trans_rects(self, rect, idx):
+        self.ovnis[idx].translate(c31.Vecteur(rect.get_speedX(),
+                                       rect.get_speedY()))
+        self.ovnis[idx].draw()
+
+    def trans_square(self, position: c31.Vecteur):
+        self.vaisseau.translate(position)
+        self.vaisseau.draw()
+
+    def get_vaisseau(self):
+        return self.vaisseau
+
+    def get_ovnis(self):
+        return self.ovnis
+    
+    # def get_boss(self):
+    #     return self.boss
+
+    def get_power_up(self):
+        return self.power_up
+
+    def get_canvas(self):
+        return self.canvas
+
+    def destroy(self):
+        self.canvas.destroy()
+
+    def reset_timer(self):
+        self.update_timer(0)
+
+    def message_box(self, title: str, text: str):
+        messagebox.showinfo(title=title,
+                            message=text)
 
 class VueMenu():
     def __init__(self): # root, fct_creer_session, destroy_Session, fct_Choix_diff, set_Leaderboard, closeApp
@@ -24,62 +144,7 @@ class VueMenu():
             set_Leaderboard (méthode):      Bouton pour appeler la méthode set_Leaderboard
             closeApp (méthode):             Bouton pour appeler root.destroy()
         """
-        #self.root = root
-        
-    #     self.root.grid()
-    #     # self.btn_create = tk.PhotoImage(
-    #     #                         file="images/buttons/btn_create_session.png"
-    #     #                     )
-    #     self.boutonCreateSession = ttk.Button(
-    #                                 root, text="Créer session",
-    #                                 command=fct_creer_session
-    #                             )
-
-    #     # self.btn_delete = tk.PhotoImage(
-    #     #                         file="images/buttons/btn_delete_session.png"
-    #     #                     )
-
-    #     self.boutonDestroySession = ttk.Button(root, text="Effacer session",
-    #                                            command=destroy_Session)
-        
-    #     """ Menu déroulant pour sélectionner la difficulté du jeu.
-    #         Lorsque l'utilisateur effectue son choix, le 4e argument du ttk.OptionMenu (*self.choix)
-    #         envoie la string choisie en paramètre au moment de l'appel de la commande
-    #     """
-    #     self.selection = StringVar()
-    #     self.selection.set("Difficulte")
-    #     self.choix = [
-    #         "1-Facile",
-    #         "2-Normal",
-    #         "3-Difficile",
-    #         "4-Progressif"
-    #     ]
-    #     # self.diff_choice = tk.PhotoImage(
-    #     #                     file="images/buttons/btn_choix_diff.png"
-    #     #                     )
-    #     self.boutonSetDifficulte = ttk.OptionMenu(root, self.selection,
-    #                                               "Difficulte", *self.choix,
-    #                                               command=fct_Choix_diff)
-
-    #     # self.show_score = tk.PhotoImage(
-    #     #                             file="images/buttons/btn_show_scores.png"
-    #     #                             )
-
-    #     self.boutonSetLeaderboard = ttk.Button(root, text="Afficher scores",
-    #                                            command=set_Leaderboard)
-
-    #     self.boutonQuitterJeu = ttk.Button(root, text="Quitter le jeu",
-    #                                        command=closeApp)
-
-    # def draw(self):
-    #     """ Positionnement des boutons dans l'environnement GUI. """
-    #     i = 1
-    #     self.boutonCreateSession.grid   (row=i, column=1)
-    #     self.boutonDestroySession.grid  (row=i, column=2)
-    #     self.boutonSetDifficulte.grid   (row=i, column=3)
-    #     self.boutonSetLeaderboard.grid  (row=i, column=4)
-    #     self.boutonQuitterJeu.grid      (row=i, column=5)
-
+    
     def message_Box(self, codeErreur, name):
         """ Boîtes de messages contextuelle pour les boutons Créer session, effacer session et afficher les scores.
 

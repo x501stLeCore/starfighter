@@ -1,29 +1,32 @@
-from Controleur import MenuControleur
+from Controleur import MenuControleur, JeuControleur
 import tkinter as tk
 from tkinter import simpledialog
 from functools import partial
 from os.path import exists
 import csv
 import os
-
+from Forme_temporaire import Bordure, Map
 import vue
 
 class Root(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Starfighter")
-        #[a,b] = simpledialog.askstring(title="Votre grosseur de fenetre", prompt="Saisissez la largeur et la hauteur de la fenetre \n(Veuillez séparer les 2 valeurs par une virgule)").split(sep=",")
-        #f"{a}x{b}"
-        self.geometry("800x600")
-        #self.frame_menu = tk.Frame(self, background="white")
-        self.frame_jeu = tk.Frame(self, background="white")
+        
+        [width,height] = self.resize_Frame(3)
+        self.geometry(f"{width}x{height}")
+
+        # pourrait être un affichage de HUD, à voir (14dec.2022)
+        # self.frame_menu = tk.Frame(self, background="red")
+        # self.frame_menu.pack(fill="both", expand=True)
         
         # canvas = tk.Canvas(Root) #est-ce que ça va fonctionner comme prévu?
         
-        self.menuControleur = MenuControleur() #Rajouter self.jeu (2e argument) à la fin du projet # self.destroy retiré
-        #self.frame_menu.pack()
+        self.frame_jeu = tk.Frame(self, background="blue")
+        self.jeu = JeuControleur(self.frame_jeu, width, height)
+        self.menuControleur = MenuControleur(self.jeu) #Rajouter self.jeu (2e argument) à la fin du projet # self.destroy retiré
+    
         menu_gui = tk.Menu(self)
-        # self.config(menu=MenuControleur.creationMenu)
         self.config(menu=menu_gui)
         self.Fichier = tk.Menu(menu_gui, tearoff = 0)   
         menu_gui.add_cascade(label="Nouveau", menu=self.Fichier)
@@ -32,7 +35,7 @@ class Root(tk.Tk):
         self.Fichier.add_separator()
         self.Fichier.add_command(label="Quitter", command=self.destroy)
         
-        # Menu diffiulté
+        # Menu difficulté
         self.Difficulte = tk.Menu(menu_gui, tearoff = 0)
         menu_gui.add_cascade(label="Difficulté", menu=self.Difficulte)
         
@@ -47,12 +50,11 @@ class Root(tk.Tk):
         menu_gui.add_cascade(label="Scores", menu=self.Score)
         self.Score.add_command(label="Afficher les scores de la session", command=self.menuControleur.set_Leaderboard)
         
-        #menu Fenetre
+        #Menu Fenêtre
         self.Fenetre = tk.Menu(menu_gui, tearoff = 0)
         menu_gui.add_cascade(label="Fenêtre", menu=self.Fenetre)
         
-        
-        #Sous-Menu fenetre
+        #Sous-Menu Fenêtre
         self.sub_Fenetre = tk.Menu(self.Fenetre, tearoff = 0)
         self.Fenetre.add_cascade(label="Ajuster la fenêtre de jeu", menu=self.sub_Fenetre) #command=self.menuControleur.resize_Frame)
         self.sub_Fenetre.add_command(label="Petite", command=partial(self.resize_Frame, 1))
@@ -60,11 +62,10 @@ class Root(tk.Tk):
         self.sub_Fenetre.add_command(label="Grande", command=partial(self.resize_Frame, 3))
         self.sub_Fenetre.add_command(label="Plein écran", command=partial(self.resize_Frame, 4))
         #self.menu.start()
-        
-        #self.frame_jeu.pack()        
+               
         #self.frame_jeu.pack(fill="both", expand=True)
+        self.frame_jeu.grid(row=0, column=0, sticky="nsew")
         #self.jeu =
-        
 
     def resize_Frame(self, choixSize):
         match choixSize:
@@ -73,5 +74,12 @@ class Root(tk.Tk):
             case 3: newSize = [1200,1000, self.attributes("-fullscreen", False)]
             case 4: newSize = [self.winfo_screenwidth(), self.winfo_screenheight(), self.attributes("-fullscreen", True)]
         self.geometry(f"{newSize[0]}x{newSize[1]}")
+        
+        # return necessaire pour créer la grosseur de la fenêtre au boot
+        if choixSize == 3:
+            return newSize[0], newSize[1]
+        
+        # self.jeu.resize_Bordure(newSize)
+        # (width=newSize[0], height=newSize[1])
         # tester si le frame jeu va bien se redimensionner (pour le gameplay)
         #self.frame_jeu.pack(fill="both", expand=True)
